@@ -241,3 +241,59 @@ class GlobusRSEProtocol(RSEProtocol):
             reaper2 daemon requires implementation of protocol.close
         """
         pass
+
+    def get(self, pfn, dest, transfer_timeout=None):
+        """ Provides access to files stored inside connected the RSE.
+
+            :param pfn: Physical file name of requested file
+            :param dest: Name and path of the files when stored at the client
+            :param transfer_timeout Transfer timeout (in seconds) - dummy
+
+            :raises DestinationNotAccessible, ServiceUnavailable, SourceNotFound
+         """
+        if pfn not in self.files:
+            raise exception.SourceNotFound(pfn)
+
+    def put(self, source, target, source_dir=None, transfer_timeout=None):
+        """ Allows to store files inside the referred RSE.
+
+            :param source: Physical file name
+            :param target: Name of the file on the storage system e.g. with prefixed scope
+            :param source_dir Path where the to be transferred files are stored in the local file system
+            :param transfer_timeout Transfer timeout (in seconds) - dummy
+
+            :raises DestinationNotAccessible, ServiceUnavailable, SourceNotFound
+        """
+        self.files.append(target)
+
+    def delete(self, pfn):
+        """ Deletes a file from the connected RSE.
+
+            :param pfn: Physical file name
+
+            :raises ServiceUnavailable, SourceNotFound
+        """
+        pass
+
+    def bulk_delete(self, pfns):
+        """
+            Submits an async task to bulk delete files.
+
+            :param pfns: list of pfns to delete
+
+            :raises TransferAPIError: if unexpected response from the service.
+        """
+        pass
+
+    def rename(self, pfn, new_pfn):
+        """ Allows to rename a file stored inside the connected RSE.
+
+            :param pfn:      Current physical file name
+            :param new_pfn  New physical file name
+
+            :raises DestinationNotAccessible, ServiceUnavailable, SourceNotFound
+        """
+        pass
+
+
+

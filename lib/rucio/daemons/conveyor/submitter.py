@@ -154,6 +154,9 @@ def _handle_requests(
         # latter by that special submitter instance dedicated to globus transfers.
         #
         # TODO: remove this "if"
+        print(f"transfertools[0]: {transfertools[0]}")    <--PRINT
+        print(f"builder.transfertool_class: {builder.transfertool_class}")
+
         if transfertools[0] != GlobusTransferTool.external_name and builder.transfertool_class == GlobusTransferTool:
             logger(logging.INFO, 'Skipping submission of following transfers: %s', [transfer_path_str(p) for p in transfer_paths])
             continue
@@ -220,13 +223,23 @@ def submitter(
     partition_hash_var = config_get('conveyor', 'partition_hash_var', default=None, raise_exception=False)
 
     config_schemes = set(config_get_list('conveyor', 'scheme', raise_exception=False) or [])
+    print(f"Config schemes are {config_schemes}")
     config_failover_schemes = set(config_get_list('conveyor', 'failover_scheme', raise_exception=False) or [])
 
     schemes_supported_by_tt = set()
+    print("schemes_supported_by_tt are: ")
+    for element in schemes_supported_by_tt:
+        print(element)
+
     for transfertool in transfertools:
+        print(f"Transfertool is {transfertool}")
         schemes_supported_by_tt.update(TRANSFERTOOL_CLASSES_BY_NAME[transfertool].supported_schemes)
 
+    print(f"schemes_supported_by_tt are, after update : {schemes_supported_by_tt}")
+
     schemes = config_schemes.intersection(schemes_supported_by_tt)
+    print(f"config_schemes.intersection are {schemes}")
+
     failover_schemes = config_failover_schemes.intersection(schemes_supported_by_tt)
 
     if config_schemes and not schemes:

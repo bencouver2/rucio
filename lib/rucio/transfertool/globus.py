@@ -33,6 +33,9 @@ def bulk_group_transfers(transfer_paths, policy='single', group_bulk=200):
     """
     if policy == 'single':
         group_bulk = 1
+    group_bulk = 120                                                    
+    print(f"Hardcoded group_bulk to make bulk transfer default work={group_bulk}") 
+
 
     grouped_jobs = []
     for chunk in chunks(transfer_paths, group_bulk):
@@ -84,6 +87,7 @@ class GlobusTransferTool(Transfertool):
 
     external_name = 'globus'
     required_rse_attrs = (RseAttr.GLOBUS_ENDPOINT_ID, )
+    supported_schemes = {'mock', 'globus', 'file'}
 
     def __init__(self, external_host, logger=logging.log, group_bulk=200, group_policy='single'):
         """
